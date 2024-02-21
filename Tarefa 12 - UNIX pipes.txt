@@ -1,0 +1,58 @@
+﻿Matheus Augusto de Souza.
+mataugusto1999@gmail.com
+
+
+Tarefa 1 -
+Estude o programa parent2child.c.  No processo pai, remova a chamada
+
+
+  close(pfd[1]);
+
+
+Recompile e execute o programa.  O que acontece?  Explique o que
+acontece em parágrafos.
+
+
+Quando temos o /close(pfd[1])/ no nosso código, ao final das 100 
+linhas imprimidas, temos o fim do processo com a interrupção e a
+palavra “END” para demonstrar que não é mais possível imprimirmos
+linhas na tela e para sairmos do processo basta apertarmos a tecla 
+‘q’ (de quit - sair). O que não ocorre caso tiremos essa chamada.
+Sem a chamada o processo fica rodando, apesar de não imprimir mais 
+de 100 linhas, até que ele seja morto. Mesmo que apertemos o comando 
+‘q’, para sair do processo, ele não irá funcionar então devemos 
+matar o processo através das teclas ‘ctrl + c’.
+Isso ocorre porque o pipe ‘pfd[1]’ continua aberto e sendo 
+processado, o que não ocorre no caso de utilizarmos a chamada
+/close/ nele.
+
+
+
+
+
+
+
+
+Tarefa 2 - 
+Explique o que você acha que Doug McIlroy quer dizer com ``do one
+thing and do it well'' (“fazer uma coisa e fazê-lo bem”) usando o 
+exemplo de dizer a seu shell
+
+
+  cat shell.c | less
+
+
+como ilustração.
+
+
+Eu acho que esta frase de Doug McIlroy quer dizer que devemos fazer
+bem, e o melhor possível, o que nos propormos a fazer. Se nós formos
+utilizar o /cat shell.c | less/ como exemplo vamos ver que estamos
+nos aproveitando de três processos do shell, o primeiro deles é o 
+/cat/ para imprimir o conteúdo de /shell.c/ no shell e após isso nós
+utilizamos o comando / | / para colocar a saída-padrão de cat na 
+entrada padrão de /less/ que por fim vai abrir uma nova janela com 
+o conteúdo que cat imprime. Isso demonstra o cuidado para não poluir
+visualmente o que se quer fazer no shell e também ajuda a não poluir
+o conteúdo que queremos imprimir, ou seja, tiramos a possibilidade 
+de fazer confusão no shell.

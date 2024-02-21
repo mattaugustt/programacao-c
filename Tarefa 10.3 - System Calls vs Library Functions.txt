@@ -1,0 +1,15 @@
+﻿Matheus Augusto de Souza
+mataugusto1999@gmail.com
+
+Tarefa 3 - 
+Na tarefa 1 utilizamos o open para de fato abrir o arquivo para escrita, 
+apagar seu conteúdo ou para criá-lo caso não exista, se ocorrer algum erro 
+ele será referenciado em “perror”. Na tarefa 2 já fazemos algo diferente 
+para um mesmo objetivo, utilizamos o apontador para o arquivo e direcionamos 
+nossa string que queremos escrever no arquivo em questão, mas escrevemos a 
+string antes de fato adicionar ao arquivo. Como na tarefa 1 o codigo acessa 
+diretamente o sistema operacional, o acesso será negado, gerando o erro 
+"open:  Permission denied" diferente do que ocorre na tarefa 2, que 
+utilizamos somente da linguagem c para escrever no arquivo. A função ‘open’ 
+abre o arquivo de fato e a função ‘fopen’ apenas nos dá o ponteiro ‘fp’ 
+(‘close’ e ‘fclose’ funcionam de forma análoga) onde se localiza o arquivo.

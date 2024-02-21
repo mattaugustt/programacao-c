@@ -1,0 +1,86 @@
+(*) Introdução
+
+Download:
+
+  http://c.antartida.xyz/pkg/struct-0.2.tar.gz
+
+Leia, estude o programa keywords.c.  Em seguida, leia, estude o
+programa keywords2.c.  Pergunte-se --- o que fazem esses programas e
+como o fazem?  Qual a diferença entre esses programas?  Eles são muito
+parecidos, mas o primeiro lhe mostra como usar um array de estruturas
+e o segundo não faz uso de arrays.  Observe esses detalhes.
+
+A principal mensagem sendo passada por esses programas é a ideia de
+varrermos uma tabela de informações.  Quem faz a varredura aí é o
+procedimento lookup().  Em inglês, ``to look up'' significa consultar
+alguma coisa --- uma tabela, por exemplo.
+
+Note que há sintaxe nova.  Quando temos uma estrutura /table[0]/,
+conseguimos ler seus membros com o operador /./.  Por exemplo,
+
+  table[0].count
+
+mas quando temos um ponteiro /p/ para uma estrutura, então acessamos
+os membros da estrutura usando o novo operador /->/.  Por exemplo,
+
+  p->count
+
+Se não tivéssemos um novo operador na linguagem C, então estaríamos
+pra sempre condenados a escrever
+
+  (*p).count
+
+em vez de 
+
+  p->count
+
+o que seria desanimante.  Não há diferença no efeito, ou seja,
+escrever /p->count/ é exatamente o mesmo que escrever /(*p).count/.
+Os parênteses são obrigatórios porque o operador /./ tem precedência
+mais alta que /*/.  Logo, escrever *p.count pressupõe que /p/ é uma
+estrutura com um membro chamado count que é um ponteiro pra alguma
+coisa --- e não /p/ sendo um ponteiro para uma estrutura.
+
+(*) Tarefa 8
+
+Escreva um programa chamado /kw.exe/ que exiba um histograma de
+/keywords/ da linguagem C, computado a partir da /stdin/.  Por
+exemplo, executando o programa sem qualquer argumento na linha de
+comando, obtemos:
+
+%./kw.exe < getch.c
+   0 break
+   0 case
+   1 char
+   0 const
+   5 int
+   0 continue
+   0 default
+   0 unsigned
+   3 void
+   0 volatile
+   0 while
+%
+
+Agora, se passarmos um argumento pela linha de comando, o programa
+reporta apenas a /keyword/ escolhida.  Por exemplo:
+
+%./kw.exe int < getch.c
+   5 int
+%
+
+%./kw.exe void < getch.c
+   3 void
+%
+
+(*) O que entregar?
+
+Entregue só seu arquivo kw.c --- que você vai escrever do zero.  Você
+não vai precisar dissertar sobre seu programa nesta tarefa.  O que se
+mede nesta tarefa é sua capacidade de compreender código-fonte e
+``fazê-lo acontecer''.
+
+Você não precisa entregar seu getch.c.  Já temos esse arquivo.
+Entregue só seu kw.c.  Isso significa que você não pode alterar o
+código de getch.c porque vamos assumir que você usa o código de
+getch.c exatamente como está no pacote struct-0.2.tar.gz.

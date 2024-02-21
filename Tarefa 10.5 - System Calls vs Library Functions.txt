@@ -1,0 +1,34 @@
+﻿Matheus Augusto de Souza
+mataugusto1999@gmail.com
+
+Tarefa 5 - 
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+  pid_t r = fork();
+  if (r < 0) { perror("fork"); exit(1); }
+  if (r == 0) {
+    printf("sou o filho\n");
+    sleep(2);
+    exit(0);
+  }
+  printf("sou o pai\n");
+  sleep(2);
+  return 0;
+}
+
+-------------------
+@ps
+      PID    PPID    
+     1846    1845  
+-------------------    
+
+Um PID é um número de identificação, e não podemos ter dois processos 
+com o mesmo número (isso significaria que ambos são o mesmo processo). 
+Como PPID é o processo ‘pai’, o processo ‘filho’ deve ser um número 
+maior que o seu. Por essa razão temos que PPID tem seu valor em 1845 e 
+PPI tem seu valor maior, em 1846, dando a entender que veio após o 1845. 
+Semelhante a uma cadeia genealógica em linha reta, todo processo filho 
+se tornará em um processo pai.

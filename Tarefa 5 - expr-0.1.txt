@@ -1,0 +1,245 @@
+﻿Matheus Augusto de Souza
+118164136
+mataugusto1999@gmail.com
+
+
+
+
+Antes de implementarmos novos processos, devemos deixar 
+explícito que os operadores dos cálculos a serem feitos pelo
+programa expr.c devem ser separados por espaços, para que 
+sejam identificados os valores corretos (independentemente
+do número de espaços em branco utilizados).
+EX:
+@./expr.exe 1+2
+Vai resultar em um erro. 
+Se usarmos espaços:
+@./expr.exe 1     +   2
+3
+vai ter um resultado, ignorando o excesso de espaços em 
+branco.
+
+
+(*) Implementando a multiplicação e divisão.
+Para a multiplicação, criamos um novo caso no programa.
+
+
+  case 'x':
+    r = op1 * op2;
+    printf("%" PRIu64 "\n", r);
+    break;
+
+
+Utilizamos o caractere “x” para representar a multiplicação na
+linha de comando, representamos como deve ser feita a função, 
+para salvar na variável r, e depois imprimimos esse resultado 
+para o usuário.
+Ex. de uso:
+@./expr 2 x 4
+8
+
+
+Para a divisão, fazemos algo similar, mudando somente o operador. 
+
+
+  case '/':
+    r = op1 / op2;
+    printf("%" PRIu64 "\n", r);
+    break;
+
+
+Nesse caso utilizamos o caractere “/” para representar a 
+divisão na linha de comando, mostramos qual deve ser a função a 
+ser feita pelo programa, salvamos na variável r e retornamos 
+o valor para o usuário.
+Ex. de uso:
+@./expr 40 / 4
+10
+
+
+
+
+(*) Implementando a exponenciação.
+Utilizaremos o programa power para fazer a exponenciação.
+
+
+uint64_t power(uint64_t base, uint64_t n) {
+  uint64_t p; p = 1;
+  for (uint64_t i = 1; i <= n; ++i)
+    p = p * base;
+  return p;
+}
+
+
+
+
+Nessa função, multiplicamos o valor da base n vezes e vamos 
+armazenando na variável p, à cada multiplicação. De forma 
+demonstrativa, temos:
+2^5 = 2 x 2 x 2 x 2 x 2 = 32.
+
+
+Após entendermos como funciona o programa power, vamos criar 
+um novo caso para a exponenciação.
+
+
+  case '^':
+    printf("%" PRIu64 "\n", power(op1, op2));
+    break;
+
+
+Aqui utilizamos o programa power para calcular a exponenciação 
+entre os operadores 1 e 2, sendo o operador 1 a base e o 
+operador 2 o expoente.
+Ex. de uso:
+@./expr.exe 2 ^ 5
+32
+
+
+
+
+(*) O processo de conversão de string para inteiro.
+(-) Através de dois programas diferentes:
+1o - uint64_t array_to_uint64_unchecked(char *s, uint64_t *u).
+Vamos dar uma olhada no código para tentar descrevê-lo abaixo.
+
+
+uint64_t array_to_uint64_unchecked(char *s, uint64_t *u) 
+{
+  uint64_t pos;
+  uint64_t r;
+  uint64_t c;
+
+
+  pos = 0; r = 0;
+
+
+  for ( ;; ) {
+    c = (uint64_t) (s[pos] - '0');
+    if (c < 10) {
+      r = r * 10 + c; ++pos; continue;
+    }
+
+
+    break;
+  }
+
+
+  *u = r;
+  return pos;
+}
+
+
+O que é “uint64_t”? 
+De acordo com a documentação da Oracle sobre tipos e tamanhos 
+de dados, temos que uint64_t é um unsigned int(inteiro não 
+assinado) de 8 bytes. 
+(Fonte: https://docs.oracle.com/cd/E19253-01/820-0446/chp-type
+opexpr-2/index.html)
+
+
+
+
+Podemos ver, ao analisar o programa, que transformamos um array 
+em um unsigned int.
+Como é um unsigned int, só nos interessa valores positivos para 
+o inteiro.
+Tem como entrada um ponteiro de array(*s) e um ponteiro de 
+unsigned int(*u). Declaramos três variáveis: “pos”(posição), 
+“r” e “c”. Todas definidas como unsigned int em 64 bits. 
+Inicializamos “pos” e “r” com o valor 0. Após isso criamos um 
+laço for sem argumentos de entrada, dessa forma todos os 
+elementos passam por ele. Para o elemento presente no array 
+“s” no índice “pos” subtraímos o valor ‘0’, que é o fim da 
+string. 
+O caractere ‘0’ na tabela ASCII é representado pelo número ‘48’, 
+o nͦ1 equivale a 49, etc. Então, se fizéssemos a subtração de 
+qualquer número entre ‘0’ e ‘9’ - ‘0’, daria o próprio número 
+como um inteiro. (seria algo como ‘48 - 49 = -1’, mas como só 
+nos interessa valores positivos, transformamos esse resultado 
+em ‘1’ através do unsigned.) 
+Logo, transformamos esse número (que é uma string) em um 
+inteiro positivo e salvamos na variável “c”. 
+Se o valor de “c” for menor que 10, o que sempre ocorrerá, já 
+que os dígitos vão de 0 á 9, então atualizamos nossa variável 
+“r” para o resultado de ‘r x 10 + c’. 
+Ex: 
+Se utilizamos o expr em:
+@./expr.exe 15 + 1
+Vamos pegar o primeiro número (1) e transformá-lo em um int, e armazená-lo em c, logo, teremos:
+r = r * 10 + c, substituindo: 
+r = 0 * 10 + 1 -> já que ‘c’ agora vale 1. Salvamos o resultado 
+(r = 1).
+Agora, incrementamos a variável “pos”, dando o próximo índice a 
+ser verificado. 
+Dessa vez, temos:
+r = 1 * 10 + 5 -> já que ‘r’ vale 1 e ‘c’ vale 5. Salvamos o 
+resultado (r = 15), o valor 15 foi totalmente convertido e salvo 
+em “r”.
+No fim, salvamos o valor de “r” no ponteiro “*u” 
+e retornamos “pos” que dá o tamanho resultante da string.
+
+
+Vamos analisar o segundo programa e ver qual a diferença entre 
+ambos.
+
+
+2o - uint64_t array_to_uint64(char *s, uint64_t *u)
+
+
+uint64_t array_to_uint64(char *s, uint64_t *u) 
+{
+  uint64_t pos;
+  uint64_t r;
+  uint64_t c;
+
+
+  pos = 0; r = 0;
+
+
+  for ( ;; ) {
+    c = (uint64_t) (unsigned char) (s[pos] - '0');
+    if (c < 10) {
+      if( ((UINT64_MAX - c) / 10) >= r) 
+        r = r * 10 + c;
+      else return -1; 
+      ++pos; continue;
+    }
+    break;
+  }
+
+
+  *u = r;
+  return pos;
+}
+
+
+Neste programa temos as mesmas entradas, variáveis definidas e
+inicializadas em 0. A diferença entre os códigos é encontrada 
+no laço “for”, começando pelo valor de c, onde o valor de “s”
+no índice “pos” é subtraído “0” (ou seja, nada), esse valor é
+transformado em um unsigned char para posteriormente ser 
+transformado em um unsigned int e após isso salvar o número na
+variável “c”. 
+Caso o valor de “c” seja menor que 10, entramos na condição do
+if e caso o resultado da diferença de UINT64_MAX (tamanho máximo 
+do unsigned int de 8 bytes) pelo valor de c, dividido por 10 
+for maior ou igual a r então entramos na condição do segundo if 
+(dentro do anterior), neste if atualizamos o valor de r para 
+r x 10 + c. Caso não entre no if vamos para o else e retornamos 
+o valor -1. Após a execução do segundo if ou do else, temos o
+incremento da variável “pos” e temos um break no laço for.
+No fim salvamos o valor de “r” no ponteiro “*u” e retornamos 
+a variável “pos”.
+
+
+Como o primeiro programa não verifica se o valor de r cabe em 
+um unsigned int (com 8 bytes), ele pode acabar resultando em
+valores maiores dos que são capazes de ser armazenados em um 
+uint64_t. Dessa forma o resultado não pode ser representado, por 
+ser maior do que o valor máximo permitido, e resulta em um transbordamento (overflow) e caso isso ocorra a linguagem C irá 
+zerar esse número. Então, o resultado de ‘UINT64_MAX - c’ seria 
+um valor negativo, visto que o valor de “c” seria maior que o 
+máximo aceito em um sistema de 64 bits, e logo iríamos para o 
+else e retornaríamos o valor -1 (já que 0 no shell é considerado 
+True).

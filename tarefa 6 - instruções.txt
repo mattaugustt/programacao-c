@@ -1,0 +1,228 @@
+(*) Introdução
+
+Precisaremos de
+
+  http://c.antartida.xyz/pkg/struct-0.1.tar.gz
+  
+(*) Estruturas
+
+Em C, estruturas aglomeram dados, muitas vezes de tipos diferentes.
+Não meramente aglomeram, mas também criam um novo tipo de dado.  Por
+exemplo, como expressaríamos em C um ponto de números inteiros no
+plano cartesiano?  Precisamos de dois inteiros, um para a coordenada x
+e outro para a coordenada y.  Uma forma é dizer
+
+  int x; 
+  int y;
+
+Mas muito melhor é dizer
+
+  struct point {
+    int x;
+    int y;
+  };
+
+porque agora está claro que ambos nomes /x/ e /y/ compõem um todo, uma
+estrutura chamada /struct point/.  Um ponto no plano cartesiano.
+
+Note o ponto-e-vírgula na última linha da declaração de /struct
+point/.  (Já esqueci desse ponto-e-vírgula duas vezes só na última
+hora.)  
+
+A palavra-chave /struct/ introduz uma declaração de uma estrutura.  O
+que fizemos acima foi declarar uma estrutura.  Declarar --- lembre-se
+--- é dizer o tipo.  Logo, não há espaço alocado acima pra dois
+inteiros x e y.  Ainda não.  Se não soubermos quando há espaço e
+quando não há, tentaremos colocar coisas onde não há espaço, o que não
+é o que desejamos.  Declarar não é alocar espaço.  Definir é.  (Esses
+são os verbos que são usados; não fizemos essas escolhas.)
+
+Não é possível (ou sensato) inicializar uma coisa que não ocupa espaço
+algum porque não há espaço lá pra colocar um valor inicial.  Logo, não
+tem sentido dizer algo como
+
+  struct point {
+    int x = 0;  /* insensato */
+    int y = 0;  /* insensato */
+  };
+
+porque --- como já sabemos --- a declaração acima não aloca espaço
+para dois inteiros, mas apenas declara que /struct point/ representa
+um tipo aglomerado.
+
+Todo tipo tem um tamanho.  Qual é o tamanho dessa estrutura?  O
+tamanho é o tamanho de um inteiro mais o tamanho de outro inteiro.  Se
+um inteiro tiver 4 bytes de tamanho, então essa estrutura ocupará 8
+bytes.  Como os tipos são coisas importantes para o compilador, então
+o compilador sempre sabe o tamanho das coisas que são declaradas a
+ele.  Logo, o operador sizeof sabe lhe dizer o trabalho de uma
+estrutura.
+
+(*) Vocabulário
+
+Na declaração 
+
+  struct point {
+    int x;
+    int y;
+  };
+
+o nome ``point'' é chamado de /structure tag/.  A palavra ``tag'' no
+inglês significa ``etiqueta''.  Os nomes x e y são chamados de
+/members/.  São os membros da estrutura.
+
+Apesar de /point/ ser chamado de ``tag'', devemos considerar o nome da
+estrutura como sendo /struct point/.  Por exemplo, quando você quer
+alocar espaço para uma /struct point/, declarada acima, você escreve:
+
+  struct point p;
+
+Não dizemos
+
+  point p; /* incorreto */
+
+Então não parece muito útil pensar no nome da estrutura como sendo
+/point/.  É melhor pensar no nome dela como sendo /struct point/.
+
+(*) Vocabulário, ``plano cartesiano''
+
+Por que dizemos ``plano cartesiano'' se o plano vem de René Descartes?
+Não deveríamos dizer plano ``descartesiano''?  Naquela época a língua
+acadêmica era o Latin.  O nome ``René Descartes'' em Latin se escreve
+``Renatus Cartesius''.
+
+(*) Como usar as estruturas?
+
+Veja no exemplo que declaramos /struct point/ como um tipo que
+aglomera dois inteiros pequenos --- ou seja, /short/.  Observe que
+usamos o operador ``.'' pra acessar um membro de /struct point/, isto
+é, pra acessar ou pra atribuir-lhe um valor.
+
+--8<---------------cut here---------------start------------->8---
+#include <stdio.h>
+
+int main(void) {
+
+  struct point {
+    short int x;
+    short int y;
+  };
+
+  struct point p1;
+  struct point p2;
+
+  p1.x = 0; p1.y = 0;
+  p2.x = 1; p2.y = 1;
+
+  printf("A origem do plano: (%d, %d).\n", p1.x, p1.y);
+  printf("Um ponto no plano: (%d, %d).\n", p2.x, p2.y);
+  printf("O tamanho de /struct point/: %ld.\n", sizeof p1);
+  printf("O tamanho de /struct point/: %ld.\n", sizeof p2);
+  printf("O tamanho de /struct point/: %ld.\n", sizeof (struct point));
+  printf("O tamanho de /struct point */: %ld.\n", sizeof (struct point *));
+  
+  return 0;
+}
+--8<---------------cut here---------------end--------------->8---
+
+%./points.exe
+A origem do plano: (0, 0).
+Um ponto no plano: (1, 1).
+O tamanho de /struct point/: 4.
+O tamanho de /struct point/: 4.
+O tamanho de /struct point/: 4.
+O tamanho de /struct point */: 8.
+%
+
+O tamanho de /struct point/ é 4 porque, no meu computador, um /short
+int/ ocupa 2 bytes.  Repare, portanto, que um ponteiro para uma
+/struct point/ é mais caro que essa estrutura pequena: precisamos de
+mais bytes para armazenar um endereço de memória do que para guardar
+dois inteiros /short int/.  Mas estruturas podem ser enormes porque
+elas podem conter muitas coisas e podem conter coisas grandes, como
+arrays --- veja big.c.
+
+  struct big {
+    char bs1[1000];
+    char bs2[1000];
+    char bs3[1000];
+    char c;
+  };
+
+  struct big b; /* Caro compilador, preciso de 
+                   espaço para uma /struct big/. */
+  printf("How big is /b/? It's %ld bytes big.\n", sizeof b);
+
+%./big
+How big is /b/? It's 3001 bytes big.
+%
+
+(*) Estruturas e procedimentos: estruturas não são como arrays
+
+Uma coisa muito útil sobre estruturas é que elas são como inteiros e
+caracteres: se você passar uma estrutura como argumento para um
+procedimento, a estrutura é *copiada* para o procedimento.
+
+Isso nos dá a seguinte lei.
+
+--8<---------------cut here---------------start------------->8---
+Lei.  Estruturas não são como arrays.  Arrays decaem para ponteiros
+quando passados para procedimentos.  As estruturas não.  As estruturas
+são copiadas pra dentro do procedimento.
+--8<---------------cut here---------------end--------------->8---
+
+Observe o programa copias.exe:
+
+%./copias.exe
+p = (0, 0)
+q = (1, 2)
+%
+
+Agora observe o copias.c.  Note que construimos /p/, passamos /p/ para
+o procedimento add1(p) e o procedimento add1() não alterou a estrutura
+/p/ de main.  Mais ainda, a estrutura /q/ recebeu uma cópia de /ret/
+--- que veio de dentro do procedimento add1().
+
+Isso significa que o compilador copiou dois inteiros pra dentro do
+procedimento e depois copiou dois inteiros pra fora do procedimento,
+afinal /struct point/ é composto de dois inteiros.
+
+Isso nos permitir copiar arrays também.  (De forma fácil.)
+
+(*) Copiar array, uma aplicação da lei
+
+Como se copia um array?  É preciso copiar cada byte do array, um por
+vez.  Normalmente a cópia é feita usando um procedimento como memcpy()
+--- de ``[mem]ory [c]o[py]''.  (Diga ``man memcpy'' a seu shell para
+mais informações.)
+
+Usaremos estruturas pra conseguir copiar arrays usando apenas o
+operador /=/.  Eis um exemplo.  Considere o seguinte tipo:
+
+  struct ip_address {
+    unsigned char bs[4]; /* ``bs'' de [b]yte[s] */
+  }
+
+Por que declararíamos uma /struct ip_address/ só pra ``embrulhar'' um
+array de 4 bytes?  Porque assim podemos copiá-lo com facilidade:
+
+  struct ip_address ip1;
+  ip1.bs[0] = 65;
+  ip1.bs[1] = 21;
+  ip1.bs[2] = 52;
+  ip1.bs[3] = 178;
+         
+  struct ip_address ip2;
+  ip2 = ip1; /* todos os bytes de ip1 foram copiados pra ip2 */
+
+O compilador gera código de máquina que copia cada byte pra gente.
+Veja essa aplicação em ação no programa ip.c.
+
+(*) Epílogo
+
+Isso não é tudo que há pra se dizer sobre estruturas, mas é um bom
+começo.  Estruturas dão à linguagem C uma boa capacidade de abstração,
+o que é vital na implementação de estratégias de uma forma geral.
+Daqui pra frente usaremos estruturas em quase todas as próximas
+investigações e elas estão presentes em praticamente qualquer código C
+que você encontrará por aí.

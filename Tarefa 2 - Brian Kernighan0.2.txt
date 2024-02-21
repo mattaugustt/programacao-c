@@ -1,0 +1,77 @@
+Matheus Augusto de Souza
+118164136
+mataugusto1999@gmail.com
+
+1. Forma/método utilizado para a explicação:
+	Para apresentar a função lnlen.c podemos ver o código ao inverso para 
+entender melhor, isto é, podemos ler primeiramente o segundo código para só 
+então vermos e termos uma melhor compreensão do primeiro.
+
+"
+int getln(char s[], int lim)
+{
+  int c, i;
+  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
+    s[i] = c; 
+  if (c == '\n') {
+    s[i] = c;
+    ++i;
+  }
+  s[i] = '\0';
+  return i;
+}
+"
+
+2.Explicando a segunda parte do código:
+	Na função getln nós temos como entrada uma entrada padrão, o que quer 
+dizer que a entrada é passada para o programa por nós mesmos, seja indexando 
+algum arquivo para este programa como entrada ou até mesmo escrevendo a entrada,
+e também temos uma saída padrão, que direciona a resposta do programa para a 
+nossa visualização em algum momento.
+	Definimos um arrey chamado "s" através do comando "char s[]", com 
+tamanho "lim" onde "lim" é uma string com seu fechamento e suas quebras de 
+linhas.
+	Definimos "getln", "lim", "c" e "i" como valores inteiros e logo podemos 
+fazer comparações numéricas no laço for, como vemos acima.
+	No laço for, temos como regras: i igual á 0 (inicialmente), o tamanho de
+i deve ser menor que o tamanho de "lim" menos 1, o parâmetro "c" da entrada de for 
+deve ser diferente de End-Of-File (EOF), em português "fim do arquivo" e "c" tem 
+de ser diferente da quebra de linha, caso essas regras sejam respeitadas, ao fim 
+é incrementado +1 ao valor de i.
+	O laço for vai lendo cada uma das letras da string e armazenando uma 
+letra de cada vez ao arrey s. Para cada letra terminada e adicionada, adicionamos
++1 em i (como vimos na entrada do for).
+	Na entrada do argumento if, temos que c deve ser igual à quebra de linha
+para seu argumento ser lido. Caso "c" sejá uma quebra de linha, adiciona-se a 
+quebra de linha no arrey que será retornado e contabiliza +1 ao valor de i.
+	Terminado ambos os passos, adiciona-se o fechamento do arrey e retorna o 
+valor de i.
+	Agora podemos ver a primeira parte do código.
+
+"
+#include <stdio.h>
+#define MAXLINE 1000
+int getln(char s[], int lim);
+
+int main(void) {
+  int len; char ln[MAXLINE];
+  for (int i =1; (len = getln(ln, MAXLINE)) > 0; ++i)
+    printf("%d: %d: %s", i, len, ln );
+  return 0;
+}
+"
+
+3. Explicando a primeira parte do código.
+	A função principal main tem como principal objetivo retornar para nós (o
+usuário) as informações que queremos. Primeiro definimos "len" (que é o tamanho de 
+cada linha) como um valor inteiro e definimos o arrey "ln" (que é a entrada padrão 
+que escolhemos) com um tamanho MAXLINE, cujo valor definimos como mil.
+	No laço for, temos como regras: i começar com seu valor igual a 1 e 
+definido como um valor inteiro, o tamanho de "len" deve ser igual a um valor entre 
+"ln" e MAXLINE e esse valor deve ser maior que 0, no fim deste processo é 
+adicionado +1 ao valor de i.
+	No fim deste código, imprimimos os valores de i (número de linhas) e len
+(tamanho da linha) em casas decimais e a string que inserimos como entrada padrão,
+após isso retornamos 0 para executar o programa. Ao executar o programa esses 
+valores são retornados em formato de lista com linha, tamanho da linha e a linha de 
+saída.

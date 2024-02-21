@@ -1,0 +1,13 @@
+﻿#include <stdio.h>
+
+union value {
+  int ival;
+  char sval[10];
+};
+
+int main() {
+	
+	union value v[10]; /* vai criar um array de uniões 
+				com 10 elementos. */
+	return 0;
+}

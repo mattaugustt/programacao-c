@@ -1,0 +1,143 @@
+﻿Matheus Augusto de Souza
+118164136
+mataugusto1999@gmail.com
+
+
+(*) Tarefas de implementação.
+
+
+(1) O inverso multiplicativo de um racional:
+
+
+int main(void) {
+  struct rational inv;
+  struct rational r;
+    r.inteiro = 8; 
+    inv.inteiro = r.inteiro;
+    printf("inv(%d) = 1/%d\n", r.inteiro, inv.inteiro);  
+}
+
+
+Definimos em ‘struct rational’ a variável ‘inteiro’ como um valor inteiro.
+Após isso, damos à estrutura ‘r’ o valor ‘8’, e como ‘inv’ é o inverso 
+multiplicativo de ‘r’, temos que seu valor será de ‘1/8’.
+Executando:
+@./rationals.exe
+inv(8) = 1/8
+
+
+Dessa forma, caso multipliquemos 8 pelo seu inverso multiplicativo(1/8) teremos 
+como resultado o valor 1.
+
+
+
+
+(2) Implementando a divisão:
+
+
+struct rational div(struct rational r1, struct rational r2) {
+ struct rational ret;
+ret.num = r1.num * r2.den;
+ret.den = r1.den * r2.num;
+return ret;
+}
+
+
+int main(void) {
+  struct rational a;
+  struct rational b;
+  a.num = 4; a.den = 3; 
+  b.num = 3; b.den = 4; 
+
+
+  struct rational c; 
+  c = div(a, b);
+
+
+  printf(" %d/%d / %d/%d = %d/%d\n", a.num, a.den, b.num, b.den, c.num, c.den);
+  return 0; 
+}
+
+
+Para essa implementação, podemos fazer algo parecido com a função ‘mul’, porém, na
+hora de fazer a multiplicação, devemos multiplicar pelo inverso da segunda fração, 
+já que se uma fração é dividida por outra “repetimos a primeira e multiplicamos 
+pelo inverso da segunda”, e por essa razão temos o numerador multiplicado pelo 
+denominador e vice-versa.
+Após isso, criamos duas estruturas(‘a’ e ‘b’) para as frações que serão utilizadas 
+pela função e uma terceira estrutura(‘c’) para armazenar o resultado da divisão 
+destas duas. No fim, mostramos o resultado obtido.
+Executando:
+@./rationals.exe
+ 4/3 / 3/4 = 16/9
+
+
+
+
+(3) Implementação de adição de racionais:
+
+
+int main(void){
+  struct rational add;
+  struct rational r1; struct rational r2; 
+    r1.num = 5; r1.den = 2;
+    r2.num = 5; r2.den = 3;
+ 
+    add.num = ((r1.num) * r2.den) + ((r2.num) * r1.den);
+    add.den = r1.den * r2.den;
+    printf("%d/%d\n", add.num, add.den);
+  }
+
+
+Primeiro criamos duas estruturas para armazenar as frações a serem utilizadas e uma
+terceira para salvar o resultado da soma.
+multiplicamos o numerador da primeira fração pelo denominador da segunda fração, 
+assim como fazemos com a segunda, multiplicamos o seu numerador pelo denominador 
+da primeira fração, somamos os dois resultados e salvamos como o numerador da 
+fração resultante. Visualmente falando, multiplicamos cruzado e salvamos o 
+resultado.
+O denominador da fração resultante será dado pela multiplicação dos dois 
+denominadores das frações a serem somadas, dessa forma vamos encontrar o múltiplo 
+comum entre as frações e salvamos o resultado na fração resultante. 
+Poderíamos dizer, de maneira prática, que estamos multiplicando a primeira fração 
+‘em cima’ e ‘embaixo’ (numerador e denominador) pelo denominador da segunda 
+fração. Assim como fazemos na segunda, multiplicando seus valores ‘num’ e ‘den’ 
+pelo denominador da primeira.
+Executando:
+@./rationals.exe
+25/6
+
+
+
+
+(4) Implementação da Subtração de racionais:
+
+
+int main(void) {
+  struct rational sub;
+  struct rational r1; struct rational r2;
+    r1.num = 5; r1.den = 2;
+    r2.num = 5; r2.den = 3;
+ 
+    sub.num = ((r1.num) * r2.den) - ((r2.num) * r1.den);
+    sub.den = r1.den * r2.den;
+    printf("%d/%d\n", sub.num, sub.den);
+}
+
+
+
+
+Analogamente à soma, aqui temos a multiplicação do numerador da primeira fração 
+pelo denominador da segunda fração e vice-versa.
+A diferença é que aqui utilizamos o sinal negativo, caso a primeira fração seja 
+menor que a segunda, o resultado será negativo, o que não ocorreria na soma(já que 
+independe da ordem).
+Multiplicamos os dois denominadores para achar o mínimo múltiplo comum entre as 
+duas frações. Após isso, salvamos o denominador da fração resultante.
+Executando:
+@./rationals.exe
+5/6
+(para a subtração 5/2 - 5/3)
+@./rationals.exe
+-5/6
+(para a subtração 5/3 - 5/2)

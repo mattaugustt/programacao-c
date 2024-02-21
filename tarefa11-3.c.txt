@@ -1,0 +1,34 @@
+﻿#include <stdio.h>
+
+
+#define size 10
+
+
+union value {
+        int ival;
+        char *sval;
+};
+struct record {
+  char *name;
+  int type;
+};
+
+
+int main() {
+        union value v[size];
+        for (int i = 0; i < size; i++) {
+                if (i % 2 == 0)
+                        v[i].ival = i;
+                else 
+                        v[i].sval = "string";
+        }
+
+
+        for (int i = 0; i < size; i++) {
+                if (i % 2 == 0)
+                        printf("valor: %d\n", v[i].ival);
+                else
+                        printf("valor: %s\n", v[i].sval);
+        }
+        return 0;
+}

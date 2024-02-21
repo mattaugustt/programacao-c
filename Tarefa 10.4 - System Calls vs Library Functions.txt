@@ -1,0 +1,11 @@
+﻿Matheus Augusto de Souza
+mataugusto1999@gmail.com
+
+Tarefa 4 - 
+Caso não interrompamos o processo do programa da tarefa 2, ele 
+irá escrever a string que queremos no arquivo que indicamos. 
+Quando pressionamos CTRL-C e matamos esse processo a string não 
+consegue ser anexada no arquivo, pois o programa foi morto durante 
+o processo de sleep antes de ser adicionada a string no arquivo, e 
+por esta razão vemos o arquivo vazio sem nenhum traço da string 
+que indexamos para ele.

@@ -1,0 +1,90 @@
+Matheus Augusto de Souza
+118164136
+mataugusto1999@gmail.com
+
+(*) Que número inteiro está armazenado no endereço 65.21.52.178?
+Como meu computador é little-endian, devo escrever esse endereço de trás pra frente
+no array bs do programa antartida.c. 
+Então temos para o array bs:
+unsigned char bs[] = {178, 52, 21, 65};
+Compilamos antartida.c e executamos, logo, obtemos:
+@./antartida.exe
+antartida.xyz has address http://1091908786
+
+Se utilizarmos esse endereço web no navegador, seremos direcionados à uma página 
+com a seguinte mensagem:
+
+"Você chegou à Antártida.
+
+  There must be one place left in the world
+  Where the skin says it can breathe
+  There's gotta be one place left in the world
+  It's a solitude of distance and relief
+  There's gotta be one place left in the world
+
+    -- Antarctica, Midnight Oil, 1990"
+
+Vemos que o número inteiro armazenado no endereço é 1.091.908.786.
+
+Se usarmos o programa int-from-bytes.c e alterarmos os valores do array bs, também
+encontraremos esse mesmo valor.
+char bs[] = {178, 52, 21, 65};
+Após compilar e executar:
+@./int-from-bytes.exe
+1091908786
+
+(*)Compreendendo Antartida.c.
+Vamos agora ver o código desse programa e tentar entender como ele funciona, com o
+que sabemos até o momento.
+
+#include <stdio.h>
+
+int main() {
+  unsigned char bs[] = {178, 52, 21, 65}; /* little-endian */
+  unsigned int *p; p = (unsigned int *) bs;
+  printf("antartida.xyz has address http://%u\n", *p);
+}
+ 
+É um programa curto, cuja saída é um inteiro.
+Primeiro definimos um array chamado bs, só nos interessa utilizar os valores 
+positivos por isso colocamos 'unsigned' quando definimos o array, que vai receber 
+os 4 bytes que será o endereço na memória (já que cada índice do array é 
+equivalente à um byte, caso utilizemos o sizeof - que verifica o tamanho do dado -
+veremos que o array bs tem 4 bytes). 
+O endereço deve ser escrito de trás pra frente, por se tratar de uma máquina 
+little-endian. Após isso, definimos um ponteiro p, pedimos para deferenciar bs em
+um inteiro, atribuímos esse inteiro a p e deferenciamos p na saída. Isso quer dizer
+que, o valor armazenado no endereço bs é salvo no endereço p e após isso mostramos 
+o valor armazenado no endereço p (que é o valor do endereço bs). 
+Após isso imprimimos o valor no formato de endereço web.
+
+*Qual o tamanho de: (em meu computador)*
+long - 8 bytes.
+int - 4 bytes. 
+
+(*)Mudando o ponteiro p de /unsigned int */ para /unsigned long */ no programa 
+antartida.c:
+
+  unsigned long *p; p = (unsigned long *) bs;
+  printf("antartida.xyz has address http://%lu\n", *p);
+}
+(Caso deixemos o /unsigned int */ do array bs, teremos um erro)
+
+Após compilar e executar o programa, temos:
+@./antartida.exe
+antartida.xyz has address http://18446687123535115442
+
+Vemos que são endereços web diferentes.
+Se formos verificar o endereço web nos dado, veremos que ele não existe.
+Isso ocorre porque, apesar de ser o mesmo endereço na máquina com valores 
+diferentes, o navegador não reconhece. Isso se dá porque o navegador acha
+que é um número aleatório. Vemos também que são bases diferentes, se 
+utilizarmos o programa 'to-hex.c' poderemos encontrar o endereço em base 16 
+(na forma hexadecimal).
+Transformando em hexadecimal o valor '18446687123535115442' através do 
+programa to-hex.c, encontramos:
+@./to-hex.exe
+411534b2
+ffffcc34411534b2
+
+Esse é o endereço na maquina na base hexadecimal.

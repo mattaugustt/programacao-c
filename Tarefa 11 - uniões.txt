@@ -1,0 +1,98 @@
+﻿Matheus Augusto de Souza
+mataugusto1999@gmail.com
+
+Tarefa 1 -
+Escreva um programa que mostre o tamanho de /union value/ e explique
+(em língua portuguesa) o tamanho que seu programa lhe mostra.
+
+#include <stdio.h>
+
+union value {
+	int ival;
+	char *sval;
+};
+
+int main() {
+	union value valor;
+	printf("O valor da união ocupa: %d bytes na memória\n", sizeof(valor));
+	return 0; 
+}
+
+Ao executar:
+@./tarefa11-1.exe
+O valor da união ocupa: 8 bytes na memória
+
+O valor que nos é retornado é o valor máximo para armazenar o maior membro da 
+união, no nosso caso o maior membro é um ponteiro para string (/char*/) que 
+precisa de 8 bytes para ser armazenado em um sistema de 64 bits. Diferente de 
+/int/ que precisamos de apenas 4 bytes para armazená-lo.
+
+Tarefa 2 -
+Pergunta 1:
+A /union value/ é uma declaração, definição ou ambos?
+
+/union value/ está sendo usado como ambas, pois uma definição é quando damos 
+um tipo de dado à alguma variável ao declará-la e declaração é quando estamos 
+nomeando a união e seus membros, que podem ter tipos diferentes. 
+Ou seja, declaramos primeiro a /union value/ (na linha 3), e dentro dela 
+estamos definindo seus membros e os tipos dos membros. E depois usamos a mesma 
+para definir uma variável /v/ em /struct record/.
+
+Pergunta 2:
+Na declaração da estrutura /record/, o membro 
+
+  union value v 
+
+é uma declaração, definição ou ambos?  Há alguma inicialização?
+Explique seu entendimento.
+
+Neste caso a union value é uma definição pois temos que a variável /v/ está 
+sendo definida como do tipo /union value/. 
+A variável /v/ vai armazenar um dos valores definidos como membros da união. 
+Não há nenhuma inicialização pois é insensato inicializar uma coisa que não ocupa
+espaço (e coisas quando declaradas não ocupam espaço, até serem definidas).
+
+
+Tarefa 3 - 
+Uniões são como arrays ou como estruturas quando passadas a
+procedimentos?  Em outras palavras, elas são copiadas para dentro do
+procedimento como as estruturas ou decaem para ponteiros como os
+arrays?  Explique o que você pensa e prove sua resposta ao exibir um
+programa que você escreveu e que sabe explicar.
+
+Diferente de arrays, as uniões vão assumir os tipos dos seus valores ‘membros’, 
+indo em um de cada vez (na ordem), e não apenas um único tipo de dado. 
+Diferente das estruturas, as uniões só podem assumir um tipo de dado por vez, 
+não podendo apresentar dois ou mais elementos em uma única vez. E por essa 
+razão, as uniões decaem para ponteiros, pois irá apontar para um elemento por 
+vez.
+
+Ao executarmos o programa ‘tarefa11-3.c’, temos:
+@./tarefa11-3.exe
+valor: 0
+valor: string
+valor: 2
+valor: string
+valor: 4
+valor: string
+valor: 6
+valor: string
+valor: 8
+valor: string
+
+No índice ‘0’ temos um valor ‘int’ e no índice seguinte temos uma string, o 
+que vai intercalando até o índice ‘10’.
+Por ter tipos diferentes, a /union value/ não vai ser copiada de forma correta 
+como ocorreria com uma /struct value/, pois na estrutura cada variável vai 
+assumir todos os valores da estrutura e não apenas um como ocorre na união.
+
+Tarefa 4 - 
+Prove que é possível usar um array de uniões escrevendo um programa
+que ilustre o uso de um array de uniões.
+
+Um array de uniões seria um array com cada elemento do array sendo 
+representado por uniões, semelhante à uma matriz. O tamanho máximo alocado 
+para cada elemento do array, será o tamanho máximo do maior membro de cada 
+união. Qualquer membro da união será acessado pelo elemento do array.
+(Obs: não encontrei uma forma de ilustrar o array de uniões na tela de forma 
+correta)

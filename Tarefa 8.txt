@@ -1,0 +1,156 @@
+﻿Matheus Augusto de Souza
+mataugusto1999@gmail.com
+
+
+O que faltava da tarefa 7.
+7.3.1 - Escreva 3000321 da base quatro para a base dezesseis(4^2):
+podemos escrever esse número da seguinte forma
+[03][00][03][21]_{4} 
+= 0x4^7 + 3x4^6 + 0x4^5 + 0x4^4 + 0x4^3 + 3x4^2 + 2x4^1 + 1x4^0
+= (0x4 + 3)4^6 + (0x4 + 0)4^4 + (0x4 + 3)4^2 + (2x4 + 1)4^0
+--------------------------------------------------------------------------
+=  03_16  x4^6       00_16    x4^4        03_16    x4^2      21_16    x4^0
+--------------------------------------------------------------------------
+   3x16^3            0x16^2               3x16^1             9x16^0 
+
+= 3039_{16}
+
+
+0 1 2 3 10 11 12 13 20 21 22 23 30 base 4
+0 1 2 3  4  5  6  7  8  9  A  B  C base 16
+
+
+
+
+7.3.2 - 3000321 da base quatro(2^2) para a base dois:
+3000321_{4} 
+Podemos simplesmente ir convertendo os números individualmente:
+11000000111001_2
+
+
+ 0  1  2  3 - base 4
+00 01 10 11 - base 2
+
+
+
+
+
+
+
+
+Tarefa 8 -
+
+
+#include <ctype.h>
+#include <string.h>
+#include <stdio.h>
+
+
+struct key {
+  char *word; 
+  int count;
+};
+
+
+struct key table[] = {
+  {"break", 0},
+  {"case", 0},
+  {"char", 0},
+  {"const", 0},
+  {"int", 0},
+  {"continue", 0},
+  {"default", 0},
+  {"unsigned", 0},
+  {"void", 0},
+  {"volatile", 0},
+  {"while", 0}
+};
+
+
+#define NKEYS ((sizeof table) / (sizeof table[0]) )
+
+
+int getword(char *, int);
+int lookup(char *, struct key *, int lenght);
+void print_result_positive(struct key tab[], int lenght);
+
+
+#define MAXWORD 100
+
+
+int main(int argc, char* argv[]) {
+  int n; char word[MAXWORD];
+  struct key apenas_um[] ={
+            {argv[1],0}
+        };
+  while (getword(word, MAXWORD) != EOF)
+    if (isalpha(word[0])){
+      if (argc > 1){
+        if ((n = lookup(word, apenas_um, 1)) >= 0)
+          apenas_um[n].count++;
+      }
+      else{
+        if ((n = lookup(word, table, NKEYS)) >= 0)
+          table[n].count++;
+      }
+    }
+  if(argc > 1){
+        print_result_positive(apenas_um, 1);
+  }
+  else{
+      print_result_positive(table,NKEYS);
+  }
+  return 0;
+}
+
+
+void print_result_positive(struct key tab[] , int length){
+    for (int n = 0; n < length; n++)
+    if (tab[n].count > 0)
+      printf("%4d %s\n",
+             tab[n].count, tab[n].word);
+}
+
+
+int lookup(char *word, struct key tab[], int lenght) {
+  for (int i = 0; i < lenght; ++i)  {
+    if (!strcmp(word, tab[i].word))
+      return i;
+  }
+  return -1; 
+}
+
+
+int getword(char *word, int lim) {
+  int getch(void);
+  void ungetch(int);
+
+
+  int c; 
+  char *w = word;
+
+
+  while (isspace(c = getch()))
+    ;
+
+
+  if (c != EOF)
+    *w++ = c;
+
+
+  if (!isalpha(c)) {
+    *w = '\0';
+    return c;
+  }
+
+
+  for ( ; --lim > 0; w++)
+    if (!isalnum(*w = getch())) {
+      ungetch(*w);
+      break;
+    }
+
+
+  *w = '\0';
+  return word[0];
+}
